@@ -53,11 +53,11 @@
     <div class="product-grid">
       <div>
         <img src="{{ asset('images/product1.jpg') }}" alt="Product">
-        <p>T-shirt with Tape Details - $120</p>
+        <p>Long Sleeves - $120</p>
       </div>
       <div>
         <img src="{{ asset('images/product2.jpg') }}" alt="Product">
-        <p>Skinny Fit Jeans - $240</p>
+        <p>Denim Jacket - $240</p>
       </div>
     </div>
   </div>
@@ -69,7 +69,7 @@
   <div class="product-grid">
     <div>
       <img src="{{ asset('images/top1.jpg') }}" alt="Product">
-      <p>Vertical Striped Shirt - $212</p>
+      <p>Leather Jacket - $212</p>
     </div>
     <div>
       <img src="{{ asset('images/top2.jpg') }}" alt="Product">
