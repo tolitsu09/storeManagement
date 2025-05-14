@@ -8,3 +8,7 @@ route::get('/', function () {
 Route::get('/custom-login', function () {
     return view('login');
 });
+
+Route::get('/custom-register', function () {
+    return view('register');
+});
