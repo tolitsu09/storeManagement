@@ -28,7 +28,7 @@
     <p style="margin-top: 20px;">200+ Brands | 2,000+ Products | 30,000+ Customers</p>
   </div>
   <div class="hero-image">
-    {{-- Replace with your image --}}
+    
     <img src="{{ asset('images/hero.jpg') }}" alt="Hero" style="max-width: 400px;">
   </div>
 </header>
@@ -105,7 +105,7 @@
       <button class="button" type="submit">Subscribe</button>
     </form>
   </div>
-  <p>© 2025 Shop.CO. All rights reserved.</p>
+  <p>© 2025 Tolit'Store All rights reserved.</p>
 </footer>
 
 </body>
