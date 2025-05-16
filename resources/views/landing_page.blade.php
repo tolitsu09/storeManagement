@@ -7,20 +7,237 @@
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; scroll-behavior: smooth; }
-    header, section, footer { padding: 40px 20px; max-width: 1200px; margin: auto; }
-    .hero { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-    .hero-text h1 { font-size: 36px; font-weight: bold; }
-    .hero-text p { margin-top: 10px; max-width: 400px; }
-    .button { background: black; color: white; padding: 12px 24px; border: none; margin-top: 20px; cursor: pointer; }
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      scroll-behavior: smooth; 
+      background: #fff;
+    }
+    header, section, footer { 
+      padding: 40px 32px; 
+      max-width: 1800px;   /* Wider for landscape screens */
+      margin: auto; 
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .hero { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      flex-wrap: wrap; 
+      position: relative;
+      gap: 48px;
+    }
+    .hero-text h1 { font-size: 48px; font-weight: bold; }
+    .hero-text p { margin-top: 10px; max-width: 600px; font-size: 1.25rem; }
+    .button { 
+      background: black; 
+      color: white; 
+      padding: 16px 32px; 
+      border: none; 
+      margin-top: 20px; 
+      cursor: pointer; 
+      font-size: 1.1rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
     .brands, .products, .categories, .testimonials { text-align: center; }
-    .product-grid, .category-grid, .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-    footer { background: #f4f4f4; padding: 20px; font-size: 14px; }
+    .product-grid, .category-grid, .testimonial-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+      gap: 32px; 
+      margin-top: 20px; 
+      width: 100%;
+    }
+    .product-grid img, .category-grid img {
+      width: 100%;
+      max-width: 260px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+      margin-bottom: 10px;
+    }
+    .product-grid p, .category-grid p {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 500;
+    }
+    .testimonial-grid div {
+      font-size: 1.1rem;
+      color: #444;
+      padding: 24px 12px;
+    }
+    .logout-form { display: inline; }
+    .logout-btn { 
+      background: #e53935; 
+      color: #fff; 
+      border: none; 
+      padding: 12px 28px; 
+      border-radius: 4px; 
+      margin-left: 20px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      font-size: 1.1rem;
+    }
+    .logout-btn:hover { background: #b71c1c; }
+    .header-actions { 
+      display: flex; 
+      align-items: center; 
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      z-index: 10;
+    }
+    .hero-image img {
+      max-width: 600px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    footer { 
+      background: #f4f4f4; 
+      padding: 32px 32px 20px 32px; 
+      font-size: 16px; 
+    }
+    .newsletter input[type="email"] {
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-right: 8px;
+      width: 260px;
+      max-width: 60vw;
+    }
+    .newsletter button {
+      padding: 10px 20px;
+      border-radius: 4px;
+      border: none;
+      background: #000;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .newsletter button:hover { background: #222; }
+
+    /* Profile Menu Styles */
+    .profile-menu {
+      position: relative;
+      display: inline-block;
+    }
+    .profile-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #222;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.3rem;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: background 0.2s;
+    }
+    .profile-icon:hover {
+      background: #444;
+    }
+    .profile-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 54px;
+      background: #fff;
+      min-width: 160px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      border-radius: 8px;
+      z-index: 100;
+      padding: 8px 0;
+    }
+    .profile-menu.open .profile-dropdown {
+      display: block;
+    }
+    .profile-dropdown a, .profile-dropdown form {
+      display: block;
+      width: 100%;
+      padding: 12px 20px;
+      color: #222;
+      text-decoration: none;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .profile-dropdown a:hover, .profile-dropdown form:hover {
+      background: #f5f5f5;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1400px) {
+      header, section, footer { max-width: 98vw; }
+      .hero-image img { max-width: 400px; }
+      .hero-text h1 { font-size: 36px; }
+    }
+    @media (max-width: 1000px) {
+      .hero { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .hero-image { width: 100%; text-align: center; margin-top: 10px; }
+      .hero-image img { max-width: 90vw; }
+      .header-actions { top: 16px; right: 16px; }
+      .product-grid, .category-grid, .testimonial-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 700px) {
+      header, section, footer { padding: 16px 2vw; }
+      .hero-text h1 { font-size: 1.5rem; }
+      .button { padding: 10px 16px; font-size: 14px; }
+      .logout-btn { padding: 8px 12px; font-size: 13px; }
+      .hero-image img { max-width: 98vw; }
+      .product-grid, .category-grid, .testimonial-grid { grid-template-columns: 1fr; }
+      .newsletter input[type="email"] { width: 120px; }
+      .header-actions { top: 8px; right: 8px; }
+    }
+    @media (max-width: 500px) {
+      .hero-text h1 { font-size: 1.1rem; }
+      footer { font-size: 12px; padding: 12px 2vw; }
+    }
   </style>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menu = document.querySelector('.profile-menu');
+    if(menu) {
+      menu.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.classList.toggle('open');
+      });
+      document.addEventListener('click', function() {
+        menu.classList.remove('open');
+      });
+    }
+  });
+  </script>
 </head>
 <body>
 
 <header class="hero">
+  <div class="header-actions">
+    @auth
+      <div class="profile-menu">
+        <div class="profile-icon">
+          {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+        </div>
+        <div class="profile-dropdown">
+          <a href="{{ route('profile') }}">Profile</a>
+          <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" style="background:none;border:none;padding:0;margin:0;width:100%;text-align:left;color:#e53935;font-weight:bold;">Log Out</button>
+          </form>
+        </div>
+      </div>
+    @endauth
+  </div>
   <div class="hero-text">
     <h1>Find Clothes That Match Your Style</h1>
     <p>Browse our diverse range of garments, designed to bring out your individuality.</p>
@@ -28,7 +245,6 @@
     <p style="margin-top: 20px;">200+ Brands | 2,000+ Products | 30,000+ Customers</p>
   </div>
   <div class="hero-image">
-    
     <img src="{{ asset('images/hero.jpg') }}" alt="Hero" style="max-width: 400px;">
   </div>
 </header>
