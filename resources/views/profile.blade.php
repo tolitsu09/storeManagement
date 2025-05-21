@@ -85,6 +85,7 @@
         <input id="email" name="email" type="email" value="{{ old('email', Auth::user()->email) }}" required>
       </div>
       <hr style="margin: 24px 0;">
+      <div id="edit-password"></div>
       <div class="form-group">
         <label for="password">New Password <span style="font-weight:normal;color:#888;">(leave blank to keep current)</span></label>
         <input id="password" name="password" type="password" autocomplete="new-password">
@@ -95,7 +96,7 @@
       </div>
       <button class="btn-save" type="submit">Save Changes</button>
     </form>
-    <a href="{{ url('/') }}" class="btn-back">Back to Home</a>
+    <a href="{{ url('/landing') }}" class="btn-back">Back to Home</a>
   </div>
 </body>
 </html>

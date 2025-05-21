@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    // Show login form at /
     public function showLoginForm()
     {
         return view('login');
@@ -21,7 +22,8 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/'); // or your dashboard route
+            // Redirect to landing page after successful login
+            return redirect()->route('landing');
         }
 
         return back()->withErrors([
