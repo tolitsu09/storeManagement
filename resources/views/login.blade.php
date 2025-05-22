@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Tolit'Store</title>
+  <title>Login - Studio Wardrobe</title>
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <style>
   body, html {
@@ -145,7 +145,7 @@
     <div class="login-overlay">
       <div class="login-box">
         <h2>Login to Tolit'Store</h2>
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('customer.login.submit') }}">
           @csrf
           <div class="form-group">
             <label for="email">Email</label>
