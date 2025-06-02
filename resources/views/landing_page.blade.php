@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tolit'Store</title>
+  <title>Studio Wardrobe</title>
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body { 
       font-family: Arial, sans-serif; 
@@ -96,10 +97,77 @@
       border-radius: 12px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     }
-    footer { 
-      background: #f4f4f4; 
-      padding: 32px 32px 20px 32px; 
-      font-size: 16px; 
+    footer {
+      background: #222;
+      color: #fff;
+      padding: 60px 32px 40px;
+      margin-top: 60px;
+    }
+    .footer-content {
+      max-width: 1800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+    }
+    .footer-section h3 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 12px;
+    }
+    .footer-section ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .footer-section ul li a:hover {
+      opacity: 1;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .social-links {
+      display: flex;
+      gap: 16px;
+      margin-top: 15px;
+    }
+    .social-links a {
+      color: #fff;
+      font-size: 1.2rem;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .social-links a:hover {
+      opacity: 1;
+    }
+    @media (max-width: 1000px) {
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      footer {
+        padding: 40px 20px 30px;
+      }
     }
     .newsletter input[type="email"] {
       padding: 10px;
@@ -203,7 +271,53 @@
       .hero-text h1 { font-size: 1.1rem; }
       footer { font-size: 12px; padding: 12px 2vw; }
     }
+
+    .cart-icon {
+      position: relative;
+      margin-right: 20px;
+      font-size: 1.5rem;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #e53935;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .add-to-cart {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .add-to-cart:hover {
+      background: #444;
+    }
+
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     const menu = document.querySelector('.profile-menu');
@@ -216,6 +330,17 @@
         menu.classList.remove('open');
       });
     }
+
+    // SweetAlert for Add to Cart
+    @if(session('success'))
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: '{{ session('success') }}',
+        showConfirmButton: false,
+        timer: 1500
+      });
+    @endif
   });
   </script>
 </head>
@@ -224,6 +349,10 @@
 <header class="hero">
   <div class="header-actions">
     @auth
+      <a href="{{ route('cart') }}" class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">{{ Auth::user()->cartItems()->count() }}</span>
+      </a>
       <div class="profile-menu">
         <div class="profile-icon">
           {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
@@ -236,12 +365,17 @@
           </form>
         </div>
       </div>
+    @else
+      <a href="{{ route('cart') }}" class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+      </a>
+      <a href="{{ route('login') }}" class="button" style="margin: 0;">Login</a>
     @endauth
   </div>
   <div class="hero-text">
     <h1>Find Clothes That Match Your Style</h1>
     <p>Browse our diverse range of garments, designed to bring out your individuality.</p>
-    <button class="button">Shop Now</button>
     <p style="margin-top: 20px;">200+ Brands | 2,000+ Products | 30,000+ Customers</p>
   </div>
   <div class="hero-image">
@@ -261,35 +395,60 @@
   </div>
 </section>
 
-
-
 <section class="products">
   <div class="container">
     <h2>New Arrivals</h2>
     <div class="product-grid">
-      <div>
+      <div class="product-card">
         <img src="{{ asset('images/product1.jpg') }}" alt="Product">
         <p>Long Sleeves - $120</p>
+        <form action="{{ route('cart.add') }}" method="POST">
+          @csrf
+          <input type="hidden" name="product_name" value="Long Sleeves">
+          <input type="hidden" name="price" value="120">
+          <input type="hidden" name="image_url" value="images/product1.jpg">
+          <button type="submit" class="add-to-cart">Add to Cart</button>
+        </form>
       </div>
-      <div>
+      <div class="product-card">
         <img src="{{ asset('images/product2.jpg') }}" alt="Product">
         <p>Denim Jacket - $240</p>
+        <form action="{{ route('cart.add') }}" method="POST">
+          @csrf
+          <input type="hidden" name="product_name" value="Denim Jacket">
+          <input type="hidden" name="price" value="240">
+          <input type="hidden" name="image_url" value="images/product2.jpg">
+          <button type="submit" class="add-to-cart">Add to Cart</button>
+        </form>
       </div>
     </div>
   </div>
 </section>
 
-
 <section class="products">
   <h2>Top Selling</h2>
   <div class="product-grid">
-    <div>
+    <div class="product-card">
       <img src="{{ asset('images/top1.jpg') }}" alt="Product">
       <p>Leather Jacket - $212</p>
+      <form action="{{ route('cart.add') }}" method="POST">
+        @csrf
+        <input type="hidden" name="product_name" value="Leather Jacket">
+        <input type="hidden" name="price" value="212">
+        <input type="hidden" name="image_url" value="images/top1.jpg">
+        <button type="submit" class="add-to-cart">Add to Cart</button>
+      </form>
     </div>
-    <div>
+    <div class="product-card">
       <img src="{{ asset('images/top2.jpg') }}" alt="Product">
       <p>Courage Graphic T-shirt - $145</p>
+      <form action="{{ route('cart.add') }}" method="POST">
+        @csrf
+        <input type="hidden" name="product_name" value="Courage Graphic T-shirt">
+        <input type="hidden" name="price" value="145">
+        <input type="hidden" name="image_url" value="images/top2.jpg">
+        <button type="submit" class="add-to-cart">Add to Cart</button>
+      </form>
     </div>
   </div>
 </section>
@@ -304,24 +463,58 @@
   </div>
 </section>
 
-<section class="testimonials">
-  <h2>Our Happy Customers</h2>
-  <div class="testimonial-grid">
-    <div><p>"Exceeded my expectations!" - Sarah M.</p></div>
-    <div><p>"Found my style with Shop.CO!" - Alex K.</p></div>
-    <div><p>"Stylish and comfortable clothes." - James L.</p></div>
-  </div>
-</section>
 
 <footer>
-  <div class="newsletter">
-    <h4>Subscribe to Our Newsletter</h4>
-    <form>
-      <input type="email" placeholder="Enter your email" style="padding: 8px;">
-      <button class="button" type="submit">Subscribe</button>
-    </form>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>About Us</h3>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Store Locations</a></li>
+        <li><a href="#">Sustainability</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Customer Service</h3>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Shipping & Returns</a></li>
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Best Sellers</a></li>
+        <li><a href="#">Sale</a></li>
+        <li><a href="#">Gift Cards</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>Connect With Us</h3>
+      <ul>
+        <li><a href="#">+1 (234) 567-8900</a></li>
+        <li><a href="#">support@tolitstore.com</a></li>
+        <li><a href="#">123 Fashion Street</a></li>
+      </ul>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
+    </div>
   </div>
-  <p>© 2025 Tolit'Store All rights reserved.</p>
+
+  <div class="footer-bottom">
+    <p>© 2025 Tolit'Store. All rights reserved.</p>
+  </div>
 </footer>
 
 </body>
